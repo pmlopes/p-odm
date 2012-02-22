@@ -2,15 +2,16 @@
   "name":         "ODM",
   "description":  "ODM mongodb library for node.js",
   "keywords":     ["mongodb", "database", "mongo", "model"],
-  "contributors": [
-    "Paulo Lopes"
-  ],
   "version":      "0.0.1",
+  "author":       "Paulo Lopes",
+  "contributors": [
+    "Tom Wieland"
+  ],
   "engines":      {
     "node":       ">=0.4.12"
   },
   "dependencies": {
     "mongodb":   ">=0.9.7"
   },
-  "main" : "./lib/index.js"
+  "main" : "index"
 }
