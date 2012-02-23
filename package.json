@@ -1,5 +1,5 @@
 {
-  "name":         "ODM",
+  "name":         "p-odm",
   "description":  "ODM mongodb library for node.js",
   "keywords":     ["mongodb", "database", "mongo", "model"],
   "contributors": [
@@ -12,5 +12,10 @@
   "dependencies": {
     "mongodb":   ">=0.9.7"
   },
-  "main" : "./lib/index.js"
+  "main" : "./lib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pmlopes/p-odm.git"
+  },
+  "license": "MIT"
 }
