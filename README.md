@@ -1,71 +1,136 @@
-ODM.js - Object Document mongodb library for node.js
-=================================================
+# ODM Documentation
 
-What is ODM.js?
-------------------
+## Defining models
 
-`ODM.js` is a minimalistic wrapper around the excelent `node-mongodb-native` driver. It's easy to use and pretty small. ODM's design is centered on:
+  `var YourModelClass = odm.model(...)`
 
-1. Simplicity
-2. Proper Error Handling and Recovery using callbacks
-3. Use of common idioms
+model function arguments are:
 
-License
--------
+  * mongoCollection - The name of the collection on MongoDB.
+  * l2cache - allow the odm to cache findById and findAll 256 queries for 30s if no changes using a LRU cache.
+  * schema - schema definition of the model.
 
-ODM is distributed under a MIT license. See the LICENSE file for more information.
+If mongoCollection is not defined this is a embedded model (meaning that is a model that can be part of other models).
 
-Installation
-============
+l2Cache can only be defined if mongoCollection is defined and is optional.
 
-`ODM.js` can be easily installed through NPM:
+Schema must always be present.
 
-    npm install odm
+### Schemas
 
-Usage
-=====
+Schemas are plain JavaScript Objects describing the fields of the model. The formal is:
 
-    var ODM = require('ODM')
+  `{fieldName: Type}`
 
-Sample Application/Quick Guide
-==============================
+Field names must adhere to MongoDB naming convention, therefore names starting with $ are not allowed. any other name is
+allowed.
 
-### Hello World
-    
-    var User = ODM.model('users', {name: String, Birthday: Date});
-    User.findAll(function(err, users) {
-      for(var i=0; i<users.length; i++) {
-        console.log(users[i]);
-      }
-    });
-    
-This is arguably the simplest working program you can write using `ODM.js`.
+### Types
 
-The code above fetches all the documents from the collection named `users`, and prints their contents (Name and Birthday).
+Recognized types are:
 
-API
----
+  * String
+  * Number
+  * Boolean
+  * Date
+  * ObjectId
+  * Binary
+  * Model Objects
+  * [] (Arrays)
+  * {$set: Function} (Specials)
 
-This section provides a quick overview of the ODM API. For detailed descriptons of the different commands mongodb provides, please check their documentation.
+ObjectId and Binary are mongoDB specific you can get the Object type from the odm module exports.
 
-### ODM Module
+Arrays can take any of supported types, for example an Array of Strings would be defined as [String].
 
-*   **ODM.connect(connection_string)** - Configures the lazy connector to know where to connect
+Specials are for cases you need to control what gets stored on MongoDB, in this case you need to pass a function that
+validates the values. This function has the following signature:
 
-### Model
+  `function (value): value`
 
-`Model` objects can be obtained through the `ODM#model` method:
+## Model methods
 
-#### Static methods
+Every model has a set of common methods, some at class level and some at intance level. The methods at class level are:
 
-*   **new Model([data[, options]])** - Create a new model instance
-*   **Model#find(query, callback)** - Find documents and wrap them in models
-*   **Model#findAll(callback)** - Find documents and wrap them in models
-*   **Model#findOne(query, callback)** - Find the first document and wrap it in a model
-*   **Model#findById(query, callback)** - Find the first document and wrap it in a model
+  * findOne(query, options, callback)
+  * findById(id, options, callback)
+  * find(query, fields, options, callback)
+  * findAll(fields, options, callback)
+  * loadDbRef(ids, fields, options, callback)
+  * ensureIndex(fieldOrSpec, options, callback)
+  * remove(query, options, callback)
 
-#### Instance methods
+Instance level methods:
 
-*   **Model#save()** - Persist the model back into the database
-*   **Model#remove()** - Delete the object from the database
-*   **Model#toJSON()** - Serialize a model to a JSON object
+  * toJSON()
+  * toString()
+  * save(options, callback)
+  * remove(options, callback)
+
+Fields and options are always optional. Callbacks have always the following format:
+
+  `function(error, result): void`
+
+Embedded documents also have the same method definition with the exception that if you try to save, update or delete you
+will get an error since it is not allowed to save the embedded document (because only its parent is stored).
+
+### loadDbRef
+
+loadDbRef is an extension to the mongodb API, it allows to quickly load a Id or array of Ids, the functionality is that
+the response array will have the same length as the ids array and the result will be in the same order. Because of this
+the complexity of this call is O(2n), the bigger the array the longer it will take.
+
+## Arrays
+
+Internal arrays of Objects mock the behavior of mongoDB, in other words internal arrays have the following methods:
+
+  * find(query, options, callback)
+  * findById(id, options, callback)
+  * findOne(query, options, callback)
+  * remove(query, callback)
+
+Mofifying a array element modified the underlying document. On top of this the arrays have 3 extra helper methods:
+
+  * push(element...)
+  * get(index)
+  * set(index, value)
+
+Using these 3 methods will make sure the objects being returned are instantiated as defined in the schema. If you decide
+to use indexes e.g.: array[i] then you will only get the json object due to limitation of javascript now allowing me
+to overwrite the indexing function.
+
+Since array finders are simplified versions of the mongo finder, you can only search for equality, not equality and
+in/not in array.
+
+  * equality: `{field: value_to_match}`
+  * inequality: `{field: {$ne: value_not_to_match}}`
+  * in array: `{field: $in: [element1, element2]}}`
+  * not in array: `{field: $nin: [element1, element2]}}`
+
+Since arrays are plain extensions of JavaScript arrays you have all the other array functions available such as splice,
+some, etc....
+
+## Embedded Documents
+
+Embedded Documents behave just like other documents but have one extra property:
+
+  `$parent`
+
+This property allows an embedded document to reference its parent document, it is only set if a document is created from
+an ODM call, if you create a embedded document object with `new` the property will not be available (unless you create
+the full top level object).
+
+## Properties and empty Objects
+
+Models and embedded documents can be checked if they contain a specific property using the same signature as the Object
+object.
+
+  `model.hasOwnPropery(property_name)` returns True if the property_name is present
+
+If the Object has any properties can be checked with:
+
+  `model.isEmpty()`
+
+# Convenience
+
+undefined Arrays and Object properties are always initialized to []|{} on get
