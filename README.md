@@ -36,12 +36,12 @@ Recognized types are:
   * ObjectId
   * Binary
   * Model Objects
-  * [] (Arrays)
+  * `[]` (Arrays)
   * {$set: Function} (Specials)
 
 ObjectId and Binary are mongoDB specific you can get the Object type from the odm module exports.
 
-Arrays can take any of supported types, for example an Array of Strings would be defined as [String].
+Arrays can take any of supported types, for example an Array of Strings would be defined as `[`String`]`.
 
 Specials are for cases you need to control what gets stored on MongoDB, in this case you need to pass a function that
 validates the values. This function has the following signature:
@@ -96,7 +96,7 @@ Mofifying a array element modified the underlying document. On top of this the a
   * set(index, value)
 
 Using these 3 methods will make sure the objects being returned are instantiated as defined in the schema. If you decide
-to use indexes e.g.: array[i] then you will only get the json object due to limitation of javascript now allowing me
+to use indexes e.g.: array`[`i`]` then you will only get the json object due to limitation of javascript now allowing me
 to overwrite the indexing function.
 
 Since array finders are simplified versions of the mongo finder, you can only search for equality, not equality and
@@ -133,4 +133,4 @@ If the Object has any properties can be checked with:
 
 # Convenience
 
-undefined Arrays and Object properties are always initialized to []|{} on get
+undefined Arrays and Object properties are always initialized to `[``]`|{} on get

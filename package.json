@@ -5,13 +5,18 @@
   "contributors": [
     "Paulo Lopes"
   ],
-  "version":      "0.0.2",
+  "version":      "0.0.3",
   "engines":      {
     "node":       ">=0.4.12"
   },
   "dependencies": {
     "mongodb":   ">=0.9.7"
   },
+
+  "devDependencies": {
+    "nodelint": "0.6.1"
+  },
+
   "main" : "./lib",
   "repository": {
     "type": "git",
