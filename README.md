@@ -66,6 +66,7 @@ Instance level methods:
   * toString()
   * save(options, callback)
   * remove(options, callback)
+  * reload(callback)
 
 Fields and options are always optional. Callbacks have always the following format:
 
@@ -73,6 +74,9 @@ Fields and options are always optional. Callbacks have always the following form
 
 Embedded documents also have the same method definition with the exception that if you try to save, update or delete you
 will get an error since it is not allowed to save the embedded document (because only its parent is stored).
+
+reload is a helper method that *always* fetches the latest model from the database, updating the cache if enabled. Once
+the method completes the original object is updated with the latest values from the DB.
 
 ### loadDbRef
 

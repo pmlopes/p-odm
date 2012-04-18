@@ -70,7 +70,9 @@ book.chapters.findOne({title: 'Chapter 1'}, function (e, c) {
 
     // we can save at any time by going to the toplevel parent (you need to know the object structure though...
     book.index.$parent.save(function (e) {
-      console.log(e);
+      book.reload(function (e) {
+        console.log(e);
+      });
     });
   });
 });
