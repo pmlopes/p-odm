@@ -138,3 +138,7 @@ If the Object has any properties can be checked with:
 # Convenience
 
 undefined Arrays and Object properties are always initialized to `[``]`|{} on get
+
+# TODO Future
+
+* As a future feature a dirty flag should be added to quickly avoid saving no changes
