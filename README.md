@@ -139,6 +139,22 @@ If the Object has any properties can be checked with:
 
 undefined Arrays and Object properties are always initialized to `[``]`|{} on get
 
+# Views
+
+Views are read only façades to a Model, you can have normalized data and use a view to get a denormalized view on the
+data. This is strange for mongo since denormalization is the norm but some times you might want to keep your data
+normalized and in certain circunstances get the denormalized version. Views only defined 2 methods:
+
+* findById
+* findOne
+
+You can define a view as:
+
+odm.view(BaseModel, enhance)
+
+enhance is a Object that defines which fields should be replaced. The spec is {propertyName: Model/View} or array of
+Model/View.
+
 # TODO Future
 
 * As a future feature a dirty flag should be added to quickly avoid saving no changes
