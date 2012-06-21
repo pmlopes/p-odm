@@ -16,7 +16,7 @@
   "main" : "./lib",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pmlopes/p-odm.git"
+    "url": "https://github.com/roughcookie/p-odm.git"
   },
   "license": "MIT"
 }
