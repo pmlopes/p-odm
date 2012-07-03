@@ -3,7 +3,7 @@ var odm = require('./lib');
 // connect to the DB
 odm.connect('mongodb://127.0.0.1:27017/mt-test');
 
-odm.schema.createSchema({
+odm.createSchema({
   "type": "object",
   "id": "http://test.me/objectid",
   "description": "MongoDB ObjectID",
@@ -13,7 +13,7 @@ odm.schema.createSchema({
   }
 }, null, "http://test.me/objectid");
 
-odm.schema.createSchema({
+odm.createSchema({
   "type": "object",
   "id": "energy",
   "description": "Energy",
