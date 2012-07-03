@@ -32,6 +32,10 @@ var StageType = odm.model('stagetypes', {
   requiredExperience:  Number
 });
 
+StageType.embeds('monsters', StageTypeMonster);
+
+console.log(StageType.prototype);
+
 StageType.prototype.isEnableTutorial = function () {
   return this.enableTutorial === true;
 };
@@ -76,10 +80,11 @@ StageType.findAll(function (error, stageTypes) {
   }
 
   stageTypes[0].monsters[1].rank = 505;
-  stageTypes[0].update({$setpath: 'monsters.1.rank'}, function (error) {
-    if (error) {
-      console.log(error);
-      process.exit(1);
-    }
-  });
+  console.log(stageTypes[0].monsters[1].save());
+//  stageTypes[0].update({$setpath: 'monsters.1.rank'}, function (error) {
+//    if (error) {
+//      console.log(error);
+//      process.exit(1);
+//    }
+//  });
 });
