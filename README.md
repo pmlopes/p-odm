@@ -14,6 +14,8 @@
 
 ## Methods
 
+### ODM#parse
+
 ### Model#findOne
 ### Model#findById
 ### Model#find
