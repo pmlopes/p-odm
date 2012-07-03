@@ -24,7 +24,7 @@ odm.schema.createSchema({
     "max": {"type": "number"},
     "lastCalculation": {"type": "date"},
     "lastActivity": {"type": "date"},
-    "regenerationTime": {"type": "number"}
+    "regenerationTime": {"type": "date"}
   }
 }, null, "energy");
 
