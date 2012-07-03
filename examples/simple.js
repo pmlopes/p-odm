@@ -20,9 +20,12 @@ var Person = odm.model("persons", {
 Person.embeds('address', Address);
 
 var p = new Person({
-  "name": "John Doe",
+  "name": "Barack Obama",
   "address": {
-    lines: [ "Some Address" ]
+    "lines": [ "1600 Pennsylvania Avenue Northwest" ],
+    "zip": "DC 20500",
+    "city": "Washington",
+    "country": "USA"
   }
 });
 
