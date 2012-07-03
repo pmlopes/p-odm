@@ -10,7 +10,8 @@
     "node":       ">=0.4.12"
   },
   "dependencies": {
-    "mongodb":   ">=0.9.7"
+    "mongodb":   ">=0.9.7",
+    "JSV": "git+ssh://git@github.com:roughcookie/JSV.git#master"
   },
 
   "main" : "./lib",
