@@ -1,90 +1,54 @@
 var odm = require('./lib');
 
 // connect to the DB
-odm.connect('mongodb://127.0.0.1:27017/mt');
+odm.connect('mongodb://127.0.0.1:27017/mt-test');
 
-// embedded docs
-var StageTypeMonster = odm.model({
-  rank:               Number,
-  neededForSilver:    Boolean,
-  neededForGold:      Boolean,
-  shownInBook:        Boolean
-});
-
-// these methods will be applied to all instances of embedded doc
-StageTypeMonster.prototype.whatIsMyRank = function () {
-  return 'My Rank is ' + this.rank;
-};
-
-var StageType = odm.model('stagetypes', {
-  index:                Number,
-  monsters:             [StageTypeMonster],
-  // This field is used for the tutorial stages
-  bossBackground:       String,
-  enableTutorial:       Boolean,
-
-  bossBattle: {
-    monsterLevel:       Number,
-    monsterSize:        Number
-  },
-
-  percentageOfSubBossHPKnockoff: [Number],
-  requiredExperience:  Number
-});
-
-StageType.embeds('monsters', StageTypeMonster);
-
-console.log(StageType.prototype);
-
-StageType.prototype.isEnableTutorial = function () {
-  return this.enableTutorial === true;
-};
-
-// pretend we are working with embedded docs
-StageType.prototype.bossBattle = {
-  greet: function () {
-    return 'Monster size is: ' + this.monsterSize + ' and level is ' + this.monsterLevel;
+odm.schema.createSchema({
+  "type": "object",
+  "id": "http://test.me/objectid",
+  "description": "MongoDB ObjectID",
+  "properties": {
+    "id": {"type": "string"},
+    "_bsontype": {"type": "string"}
   }
-};
+}, null, "http://test.me/objectid");
 
-//StageType.findOne({index: 0}, function (error, stageType) {
-//  if (error) {
-//    console.log(error);
-//    process.exit(1);
-//  }
-//
-//  stageType.index = 1000;
-//
-//  stageType.reload(function (error) {
-//    if (error) {
-//      console.log(error);
-//      process.exit(1);
-//    }
-//
-//    console.log(stageType.index);
-//
-//    stageType.index = '1000';
-//
-//    stageType.save(function (error) {
-//      if (error) {
-//        console.log(error);
-//      }
-//    });
-//  });
-//});
-//
-StageType.findAll(function (error, stageTypes) {
+odm.schema.createSchema({
+  "type": "object",
+  "id": "energy",
+  "description": "Energy",
+  "properties": {
+    "energy": {"type": "number"},
+    "delta": {"type": "number"},
+    "min": {"type": "number"},
+    "max": {"type": "number"},
+    "lastCalculation": {"type": "date"},
+    "lastActivity": {"type": "date"},
+    "regenerationTime": {"type": "number"}
+  }
+}, null, "energy");
+
+var User = odm.model('users', {
+  "type" : "object",
+  "properties": {
+    "gamertag": {"type": "string"},
+    "_id": {"$ref": "http://test.me/objectid"},
+    "focus": {"$ref": "energy"}
+  }
+});
+
+User.findAll(function (error, users) {
   if (error) {
-    console.log(error);
+    console.log('ERROR(S): ', error);
     process.exit(1);
   }
 
-  stageTypes[0].monsters[1].rank = 505;
-  console.log(stageTypes[0].monsters[1].save());
-//  stageTypes[0].update({$setpath: 'monsters.1.rank'}, function (error) {
-//    if (error) {
-//      console.log(error);
-//      process.exit(1);
-//    }
-//  });
+  users[0].save(function(error) {
+    if (error) {
+      console.log('ERROR(S): ', error);
+      process.exit(1);
+    }
+
+    odm.disconnect();
+  });
 });
