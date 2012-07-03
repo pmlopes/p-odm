@@ -19,6 +19,14 @@ var Person = odm.model("persons", {
   address: Address
 });
 
+var Person = odm.model("persons", {
+  "type" : "object",
+  "properties": {
+    "name": {"type": "string"},
+    "address": {"$ref": "http://test.me/address"}
+  }
+});
+
 // Tell that we're embedding Address as address on the person model
 Person.embeds('address', Address);
 
