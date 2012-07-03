@@ -21,8 +21,10 @@
 ### Model#remove
 ### Model#update
 ### Model#embeds
+### Model#ensureIndex
 
 ### Model.save
 ### Model.update
 ### Model.insert
 ### Model.remove
+### Model.validate
