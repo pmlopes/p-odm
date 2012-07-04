@@ -47,8 +47,6 @@ The changed person model:
 	  }
 	});
 
-    Person.embeds('address', Address);
-	
 
 ## Methods
 
@@ -101,8 +99,8 @@ Removes all documents satisfying `query`.
 #### Model#update(query, document, options, callback)
 Update all documents satisfying `query`, with document.
 
-#### Model#embeds(path, type)
-Tells the ODM to copy all the methods of `type` over to the embedded document or array of documents.
+#### Model#asModel(obj)
+Utility function to convert a JSON object to a Model class without breaking any linked references (e.g.: a object in an array).
 
 #### Model#ensureIndex(fieldOrSpec, options, callback)
 Adds an index and will also add a `findByXXX` method, where XXX is the name of the `fieldOrSpec`
