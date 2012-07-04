@@ -52,29 +52,81 @@ The changed person model:
 
 ## Methods
 
-### ODM#parse
+### Class methods
 
-### Model#findOne(query, fields, options, callback)
+#### ODM#parse(jsonString)
+Parses a JSON string to a JSON document. It is aware of ISO Dates and ObjectIds and coverts them on the fly.
+
+#### Model#findOne(query, fields, options, callback)
 Finds one document or `fields`, satisfying `query`.
 
-### Model#findById(id, fields, options, callback)
+	Person.findOne({'name': 'Barack Obama'}, function (error, document) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(document);
+	});
+#### Model#findById(id, fields, options, callback)
 Finds one document by `id`, returining `fields`.
 
-### Model#find(query, fields, options, callback)
+	Person.findById("4ff3fcf14335e9d6ba000001", function (error, document) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(document);
+	});
+#### Model#find(query, fields, options, callback)
 Finds all documents or `fields`, satisfying `query`.
 
-### Model#findAll(fields, options, callback)
+	Person.find({'name': 'Barack Obama'}, function (error, documents) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(documents);
+	});
+	
+#### Model#findAll(fields, options, callback)
 Finds all documents or `fields`.
 
-### Model#remove(query, options, callback)
+	Person.findAll(function (error, documents) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(documents);
+	});
+
+#### Model#remove(query, options, callback)
 Removes all documents satisfying `query`.
 
-### Model#update(query, document, options, callback)
-### Model#embeds(path, type)
-### Model#ensureIndex
+#### Model#update(query, document, options, callback)
+Update all documents satisfying `query`, with document.
 
-### Model.validate(verbose)
-### Model.save(options, callback)
-### Model.update(query, document, options, callback)
-### Model.insert(options, callback)
-### Model.remove(options, callback)
+#### Model#embeds(path, type)
+Tells the ODM to copy all the methods of `type` over to the embedded document or array of documents.
+
+#### Model#ensureIndex(fieldOrSpec, options, callback)
+Adds an index and will also add a `findByXXX` method, where XXX is the name of the `fieldOrSpec`
+
+### Instance methods
+
+#### Model.validate(verbose)
+Returns true or false, or all errors in case `verbose` is true.
+
+#### Model.save(options, callback)
+Saves the instance model.
+
+	p.save(function (error, id) {
+	  if (error) {
+	    console.log("error", error);
+	  } 
+	  console.log(id);
+	});
+
+#### Model.update(query, document, options, callback)
+Update the instance model.
+
+#### Model.insert(options, callback)
+Insert the instance model.
+
+#### Model.remove(options, callback)
+Remove the instance model.
