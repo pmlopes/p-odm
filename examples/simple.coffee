@@ -1,19 +1,34 @@
 odm = require("../lib")
-
 odm.connect "mongodb://127.0.0.1:27017/simple"
 
 Address = odm.model
-  lines: [ String ]
-  zip: String
-  city: String
-  country: String
+  id: "Simple#Address"
+  type: "object"
+  properties:
+    lines:
+      type: "array"
+      items:
+        type: "string"
+
+    zip:
+      type: "string"
+
+    city:
+      type: "string"
+
+    country:
+      type: "string"
 
 Person = odm.model "persons",
-  name: String
-  address: Address
+  type: "object"
+  properties:
+    name:
+      type: "string"
+
+    address:
+      $ref: "Simple#Address"
 
 Person.embeds "address", Address
-
 p = new Person
   name: "Barack Obama"
   address:
@@ -21,7 +36,6 @@ p = new Person
     zip: "DC 20500"
     city: "Washington"
     country: "USA"
-
 
 p.save (error, id) ->
   if error

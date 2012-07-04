@@ -7,23 +7,25 @@ odm.connect('mongodb://127.0.0.1:27017/simple');
 
 // Address, to be embedded on Person
 var Address = odm.model({
-  lines: [String],
-  zip: String,
-  city: String,
-  country: String
+  "id": "Simple#Address",
+  "type" : "object",
+  "properties": {
+    "lines": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "zip": {"type": "string"},
+    "city": {"type": "string"},
+    "country": {"type": "string"}
+  }
 });
 
 // Person model
 var Person = odm.model("persons", {
-  name: String,
-  address: Address
-});
-
-var Person = odm.model("persons", {
   "type" : "object",
   "properties": {
     "name": {"type": "string"},
-    "address": {"$ref": "http://test.me/address"}
+    "address": {"$ref": "Simple#Address"}
   }
 });
 
