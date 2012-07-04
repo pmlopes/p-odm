@@ -102,6 +102,9 @@ Update all documents satisfying `query`, with document.
 #### Model#asModel(obj)
 Utility function to convert a JSON object to a Model class without breaking any linked references (e.g.: a object in an array).
 
+#### Model#loadDbRef(id/ids, options, callback)
+Loads one Id or array of ids, it is similar to a simple find, however the number of results and order is the same as the array argument
+
 #### Model#ensureIndex(fieldOrSpec, options, callback)
 Adds an index and will also add a `findByXXX` method, where XXX is the name of the `fieldOrSpec`
 
