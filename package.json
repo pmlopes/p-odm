@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "mongodb":   ">=0.9.7",
-    "JSV": "git+ssh://git@github.com:roughcookie/JSV.git#master"
+    "jsonschema": "git+ssh://git@github.com:tdegrunt/jsonschema.git#master"
   },
 
   "main" : "./lib",
