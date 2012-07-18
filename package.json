@@ -10,7 +10,7 @@
     "node":       ">=0.4.12"
   },
   "dependencies": {
-    "mongodb":   ">=0.9.7"
+    "mongodb":   ">=1.0.2"
   },
 
   "main" : "./lib",
