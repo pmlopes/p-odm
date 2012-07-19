@@ -9,13 +9,10 @@ Address = odm.model
       type: "array"
       items:
         type: "string"
-
     zip:
       type: "string"
-
     city:
       type: "string"
-
     country:
       type: "string"
 
@@ -24,7 +21,6 @@ Person = odm.model "persons",
   properties:
     name:
       type: "string"
-
     address:
       $ref: "Simple#Address"
 
