@@ -5,18 +5,18 @@
   "contributors": [
     "Paulo Lopes"
   ],
-  "version":      "0.0.27",
+  "version":      "3.0.0",
   "engines":      {
     "node":       ">=0.4.12"
   },
   "dependencies": {
-    "mongodb":   ">=0.9.7"
+    "mongodb":   ">=1.0.2",
+    "jsonschema": ">= 0.0.3"
   },
 
   "main" : "./lib",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pmlopes/p-odm.git"
-  },
-  "license": "MIT"
+    "url": "https://github.com/roughcookie/p-odm.git"
+  }
 }
