@@ -1,160 +1,130 @@
-# ODM Documentation
+# ODM
 
-## Defining models
+ODM is a new, innovative and easy way to use MongoDB documents, as Models, in your code.
+It uses the [JSON schema](http://tools.ietf.org/html/draft-zyp-json-schema-03) standard for validating the documents.
 
-  `var YourModelClass = odm.model(...)`
+## Quick Start
 
-model function arguments are:
+### Connect
 
-  * mongoCollection - The name of the collection on MongoDB.
-  * l2cache - allow the odm to cache findById and findAll 256 queries for 30s if no changes using a LRU cache.
-  * schema - schema definition of the model.
+	odm.connect('mongodb://127.0.0.1:27017/simple');
 
-If mongoCollection is not defined this is a embedded model (meaning that is a model that can be part of other models).
+### Define a model
 
-l2Cache can only be defined if mongoCollection is defined and is optional.
+	var Person = odm.model("persons", {
+	  "type" : "object",
+	  "properties": {
+	    "name": {"type": "string"},
+	  }
+	});
 
-Schema must always be present.
+### Embedding other documents
 
-### Schemas
+We embed an address model in person:
+	
+	// Address, to be embedded on Person
+	var Address = odm.model({
+	  "id": "Simple#Address",
+	  "type" : "object",
+	  "properties": {
+	    "lines": {
+	      "type": "array",
+	      "items": {"type": "string"}
+	    },
+	    "zip": {"type": "string"},
+	    "city": {"type": "string"},
+	    "country": {"type": "string"}
+	  }
+	});
+	
+The changed person model:
+	
+	var Person = odm.model("persons", {
+	  "type" : "object",
+	  "properties": {
+	    "name": {"type": "string"},
+	    "address": {"$ref": "Simple#Address"}
+	  }
+	});
 
-Schemas are plain JavaScript Objects describing the fields of the model. The formal is:
 
-  `{fieldName: Type}`
+## Methods
 
-Field names must adhere to MongoDB naming convention, therefore names starting with $ are not allowed. any other name is
-allowed.
+### Class methods
 
-### Types
+#### ODM#parse(jsonString)
+Parses a JSON string to a JSON document. It is aware of ISO Dates and ObjectIds and coverts them on the fly.
 
-Recognized types are:
+#### Model#findOne(query, fields, options, callback)
+Finds one document or `fields`, satisfying `query`.
 
-  * String
-  * Number
-  * Boolean
-  * Date
-  * ObjectId
-  * Binary
-  * Model Objects
-  * `[]` (Arrays)
-  * {$set: Function} (Specials)
+	Person.findOne({'name': 'Barack Obama'}, function (error, document) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(document);
+	});
+#### Model#findById(id, fields, options, callback)
+Finds one document by `id`, returining `fields`.
 
-ObjectId and Binary are mongoDB specific you can get the Object type from the odm module exports.
+	Person.findById("4ff3fcf14335e9d6ba000001", function (error, document) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(document);
+	});
+#### Model#find(query, fields, options, callback)
+Finds all documents or `fields`, satisfying `query`.
 
-Arrays can take any of supported types, for example an Array of Strings would be defined as `[`String`]`.
+	Person.find({'name': 'Barack Obama'}, function (error, documents) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(documents);
+	});
+	
+#### Model#findAll(fields, options, callback)
+Finds all documents or `fields`.
 
-Specials are for cases you need to control what gets stored on MongoDB, in this case you need to pass a function that
-validates the values. This function has the following signature:
+	Person.findAll(function (error, documents) {
+	  if (error) {
+	    console.log("error", error);
+	  }
+	  console.log(documents);
+	});
 
-  `function (value): value`
+#### Model#remove(query, options, callback)
+Removes all documents satisfying `query`.
 
-## Model methods
+#### Model#update(query, document, options, callback)
+Update all documents satisfying `query`, with document.
 
-Every model has a set of common methods, some at class level and some at intance level. The methods at class level are:
+#### Model#loadDbRef(id/ids, options, callback)
+Loads one Id or array of ids, it is similar to a simple find, however the number of results and order is the same as the array argument
 
-  * findOne(query, options, callback)
-  * findById(id, options, callback)
-  * find(query, fields, options, callback)
-  * findAll(fields, options, callback)
-  * loadDbRef(ids, fields, options, callback)
-  * ensureIndex(fieldOrSpec, options, callback)
-  * remove(query, options, callback)
+#### Model#ensureIndex(fieldOrSpec, options, callback)
+Adds an index and will also add a `findByXXX` method, where XXX is the name of the `fieldOrSpec`
 
-Instance level methods:
+### Instance methods
 
-  * toJSON()
-  * toString()
-  * save(options, callback)
-  * remove(options, callback)
-  * reload(callback)
+#### Model.validate(verbose)
+Returns true or false, or all errors in case `verbose` is true.
 
-Fields and options are always optional. Callbacks have always the following format:
+#### Model.save(options, callback)
+Saves the instance model.
 
-  `function(error, result): void`
+	p.save(function (error, id) {
+	  if (error) {
+	    console.log("error", error);
+	  } 
+	  console.log(id);
+	});
 
-Embedded documents also have the same method definition with the exception that if you try to save, update or delete you
-will get an error since it is not allowed to save the embedded document (because only its parent is stored).
+#### Model.update(query, document, options, callback)
+Update the instance model.
 
-reload is a helper method that *always* fetches the latest model from the database, updating the cache if enabled. Once
-the method completes the original object is updated with the latest values from the DB.
+#### Model.insert(options, callback)
+Insert the instance model.
 
-### loadDbRef
-
-loadDbRef is an extension to the mongodb API, it allows to quickly load a Id or array of Ids, the functionality is that
-the response array will have the same length as the ids array and the result will be in the same order. Because of this
-the complexity of this call is O(2n), the bigger the array the longer it will take.
-
-## Arrays
-
-Internal arrays of Objects mock the behavior of mongoDB, in other words internal arrays have the following methods:
-
-  * find(query, options, callback)
-  * findById(id, options, callback)
-  * findOne(query, options, callback)
-  * remove(query, callback)
-
-Mofifying a array element modified the underlying document. On top of this the arrays have 3 extra helper methods:
-
-  * push(element...)
-  * get(index)
-  * set(index, value)
-
-Using these 3 methods will make sure the objects being returned are instantiated as defined in the schema. If you decide
-to use indexes e.g.: array`[`i`]` then you will only get the json object due to limitation of javascript now allowing me
-to overwrite the indexing function.
-
-Since array finders are simplified versions of the mongo finder, you can only search for equality, not equality and
-in/not in array.
-
-  * equality: `{field: value_to_match}`
-  * inequality: `{field: {$ne: value_not_to_match}}`
-  * in array: `{field: $in: [element1, element2]}}`
-  * not in array: `{field: $nin: [element1, element2]}}`
-
-Since arrays are plain extensions of JavaScript arrays you have all the other array functions available such as splice,
-some, etc....
-
-## Embedded Documents
-
-Embedded Documents behave just like other documents but have one extra property:
-
-  `$parent`
-
-This property allows an embedded document to reference its parent document, it is only set if a document is created from
-an ODM call, if you create a embedded document object with `new` the property will not be available (unless you create
-the full top level object).
-
-## Properties and empty Objects
-
-Models and embedded documents can be checked if they contain a specific property using the same signature as the Object
-object.
-
-  `model.hasOwnPropery(property_name)` returns True if the property_name is present
-
-If the Object has any properties can be checked with:
-
-  `model.isEmpty()`
-
-# Convenience
-
-undefined Arrays and Object properties are always initialized to `[``]`|{} on get
-
-# Views
-
-Views are read only façades to a Model, you can have normalized data and use a view to get a denormalized view on the
-data. This is strange for mongo since denormalization is the norm but some times you might want to keep your data
-normalized and in certain circunstances get the denormalized version. Views only defined 2 methods:
-
-* findById
-* findOne
-
-You can define a view as:
-
-odm.view(BaseModel, enhance)
-
-enhance is a Object that defines which fields should be replaced. The spec is {propertyName: Model/View} or array of
-Model/View.
-
-# TODO Future
-
-* As a future feature a dirty flag should be added to quickly avoid saving no changes
+#### Model.remove(options, callback)
+Remove the instance model.
