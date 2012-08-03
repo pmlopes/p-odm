@@ -5,25 +5,22 @@ var odm = require('./lib');
 // connect to the DB
 odm.connect('mongodb://127.0.0.1:27017/mt-test');
 
-//var baseModel = require('./lib/protos/freemodel');
-//var User = baseModel(odm, 'users');
-//
-//User.findOne({}, function (error, user) {
-//  if (error) {
-//    console.error(error);
-//    process.exit(1);
-//  }
-//
-//  console.log(user);
-//  console.log(user instanceof User);
-//  console.log(user.save);
-//  process.exit(0);
-//});
+var User = odm.model('users');
 
-var schemaModel = require('./lib/protos/schemamodel');
+User.findOne({}, function (error, user) {
+  if (error) {
+    console.error(error);
+    process.exit(1);
+  }
+
+  console.log(user);
+  console.log(user instanceof User);
+  console.log(user.save);
+  process.exit(0);
+});
 
 // Address, to be embedded on Person
-var Address = schemaModel(odm, {
+var Address = odm.model({
   "id": "Simple#Address",
   "type" : "object",
   "properties": {
@@ -38,7 +35,7 @@ var Address = schemaModel(odm, {
 });
 
 // Person model
-var Person = schemaModel(odm, 'persons', {
+var Person = odm.model('persons', {
   type : 'object',
   properties: {
     name: {'type': 'string'},
@@ -77,4 +74,5 @@ Person.findOne({name: "Barack Obama"}, {extend: true}, function (error, person) 
   }
 
   person.sayHello();
+  process.exit(0);
 });
