@@ -5,32 +5,18 @@ var odm = require('../lib');
 // connect to the DB
 odm.connect('mongodb://127.0.0.1:27017/simple');
 
-// Address, to be embedded on Person
-var Address = odm.model({
-  "id": "Simple#Address",
-  "type" : "object",
-  "properties": {
-    "lines": {
-      "type": "array",
-      "items": {"type": "string"}
-    },
-    "zip": {"type": "string"},
-    "city": {"type": "string"},
-    "country": {"type": "string"}
+/** @type {Person} */
+var Person = require('./Person');
+
+Person.findOne({name: 'me'}, function (error, person) {
+  if (error) {
+    console.error(error);
   }
+
+  person.findMe();
 });
 
-// Person model
-var Person = odm.model("persons", {
-  "type" : "object",
-  "properties": {
-    "name": {"type": "string"},
-    "address": {"$ref": "Simple#Address"}
-  }
-});
-
-// Tell that we're embedding Address as address on the person model
-Person.embeds('address', Address);
+Person.findMe();
 
 // Create a new person
 var p = new Person({
