@@ -21,6 +21,7 @@ var Address = odm.embeddedModel({
  * @name Person
  * @augments {SchemaModel} */
 var Person = module.exports = odm.schemaModel("persons", {
+  "id": "Simple#Person",
   "type" : "object",
   "properties": {
     "name": {"type": "string"},
@@ -28,16 +29,10 @@ var Person = module.exports = odm.schemaModel("persons", {
   }
 });
 
-
-Person.findMe = function () {
-};
-
-function findMe() {
-
-}
-
-Person.prototype.findMe = function () {
-};
-
-// Tell that we're embedding Address as address on the person model
-Person.embeds('address', Address);
+odm.graph('schema.dot', [Address.$schema, Person.$schema], function (error) {
+  if (error) {
+    console.log(error);
+    process.exit(1);
+  }
+  process.exit(0);
+});
