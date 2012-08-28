@@ -5,13 +5,13 @@
   "contributors": [
     "Paulo Lopes"
   ],
-  "version":      "3.0.9",
+  "version":      "3.0.10",
   "engines":      {
     "node":       ">=0.4.12"
   },
   "dependencies": {
     "mongodb":   "1.0.2",
-    "jsonschema": "0.0.5"
+    "jsonschema": "0.0.6"
   },
 
   "main" : "./lib",
