@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "mongodb":   "1.1.11",
-    "jsonschema": "0.1.3"
+    "jsonschema": "0.1.4"
   },
 
   "main" : "./lib",
