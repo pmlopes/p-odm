@@ -36,22 +36,18 @@ p.save(function (error, oid) {
     p.update({$set: {name: 'Paulo Lopes'}}, function (error) {
       handleError(error);
 
-      Person.findById(oid, function (error, person) {
+      p.reload(function (error) {
         handleError(error);
 
         // should have name Paulo
-        console.log(person);
+        console.log(p);
 
-        person.revert(function (error) {
+        p.revert(function (error) {
           handleError(error);
 
-          Person.findById(oid, function (error, person) {
-            handleError(error);
-
-            // should have name
-            console.log(person);
-            process.exit(0);
-          });
+          // should have name
+          console.log(p);
+          process.exit(0);
         });
       });
     });
