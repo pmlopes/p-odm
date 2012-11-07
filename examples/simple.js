@@ -27,7 +27,7 @@ function handleError(error) {
 }
 
 // Save to the database
-p.save(function (error, oid) {
+p.save(function (error) {
   handleError(error);
 
   p.snapshot(function (error) {
