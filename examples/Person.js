@@ -3,7 +3,7 @@
 var odm = require('../lib');
 
 // Address, to be embedded on Person
-var Address = odm.embeddedModel({
+var Address = odm.embeddedSchemaModel({
   "id": "Simple#Address",
   "type" : "object",
   "properties": {
@@ -29,10 +29,10 @@ var Person = module.exports = odm.schemaModel("persons", {
   }
 });
 
-odm.graph('schema.dot', [Address.$schema, Person.$schema], function (error) {
-  if (error) {
-    console.log(error);
-    process.exit(1);
-  }
-  process.exit(0);
-});
+//odm.graph('schema.dot', [Address.$schema, Person.$schema], function (error) {
+//  if (error) {
+//    console.log(error);
+//    process.exit(1);
+//  }
+//  process.exit(0);
+//});
