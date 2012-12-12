@@ -10,8 +10,8 @@
     "node":       ">=0.4.12"
   },
   "dependencies": {
-    "mongodb":   "1.1.11",
-    "jsonschema": "0.1.4"
+    "mongodb":   "1.2.3",
+    "jsonschema": "0.1.5"
   },
 
   "main" : "./lib",
