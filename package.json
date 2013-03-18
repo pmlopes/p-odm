@@ -5,12 +5,12 @@
   "contributors": [
     "Paulo Lopes"
   ],
-  "version":      "3.1.17",
+  "version":      "3.1.18",
   "engines":      {
     "node":       ">=0.4.12"
   },
   "dependencies": {
-    "mongodb":   "1.2.12",
+    "mongodb":   "1.2.14",
     "jsonschema": "0.3.2"
   },
 
